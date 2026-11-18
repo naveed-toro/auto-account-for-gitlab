@@ -118,13 +118,34 @@ async function restore(name) {
   }
 }
 
-async function setActive(name) {
-  await chrome.storage.local.set({ active: name });
+// Two letters for the badge. When another saved account starts the same way,
+// skip the part they share so the badge still tells them apart: aa-demo-home → HO.
+function badgeText(name, names) {
+  const two = (s) => s.replace(/^[^a-z0-9]+/i, '').slice(0, 2).toUpperCase();
+  const a = name.toLowerCase();
+  let shared = 0;
+  for (const other of names) {
+    const b = other.toLowerCase();
+    if (b === a || two(b) !== two(a)) continue;
+    let i = 0;
+    while (i < a.length && a[i] === b[i]) i++;
+    shared = Math.max(shared, i);
+  }
+  return two(name.slice(shared)) || two(name);
+}
+
+async function showBadge() {
+  const { active, accounts } = await getState();
   try {
     await chrome.action.setBadgeBackgroundColor({ color: '#2f2f35' });
-    await chrome.action.setBadgeText({ text: name ? name.slice(0, 2).toUpperCase() : '' });
-    await chrome.action.setTitle({ title: name ? 'GitLab: ' + name : 'Auto Account for GitLab' });
+    await chrome.action.setBadgeText({ text: active ? badgeText(active, Object.keys(accounts)) : '' });
+    await chrome.action.setTitle({ title: active ? 'GitLab: ' + active : 'Auto Account for GitLab' });
   } catch {}
+}
+
+async function setActive(name) {
+  await chrome.storage.local.set({ active: name });
+  await showBadge();
 }
 
 function switchTo(name) {
@@ -272,6 +293,7 @@ const commands = {
     delete st.accounts[name];
     for (const [ns, acc] of Object.entries(st.rules)) if (acc === name) delete st.rules[ns];
     await chrome.storage.local.set({ accounts: st.accounts, rules: st.rules });
+    await showBadge();
     return { ok: true };
   },
   async setRule({ ns, name }) {
@@ -298,4 +320,4 @@ chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
 });
 
 // Restore the badge when the browser starts.
-getState().then((st) => setActive(st.active));
+showBadge();
