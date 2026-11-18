@@ -230,11 +230,12 @@ const commands = {
     const me = await identify();
     const st = await getState();
     if (me !== st.active) await setActive(me);
-    if (me) await locked(() => snapshot(me)); // refresh while we are here
-    const signedIn = me || (await whoamiApi());
+    const user = await whoamiApi(); // null when GitLab has signed this session out
+    if (me && user) await locked(() => snapshot(me)); // refresh while we are here
     return {
       active: me,
-      unsaved: me ? null : signedIn,
+      signedOut: Boolean(me) && !user,
+      unsaved: me ? null : user,
       awaitingNew: st.awaitingNew,
       accounts: Object.entries(st.accounts).map(([name, a]) => ({ name, savedAt: a.savedAt })),
       rules: st.rules,

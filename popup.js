@@ -21,6 +21,9 @@ async function render() {
     );
   } else if (s.awaitingNew) {
     note.append(el('div', { className: 'note' }, 'Sign in to the other account in the GitLab tab. It is saved automatically.'));
+  } else if (s.signedOut) {
+    note.append(el('div', { className: 'note' },
+      el('b', {}, s.active), ' is signed out of GitLab. Sign in to it again, then open this menu once.'));
   } else if (!s.accounts.length) {
     note.append(
       el('div', { className: 'note' },
@@ -38,7 +41,7 @@ async function render() {
       el('div', { className: 'row' + (isActive ? ' active' : '') },
         el('span', { className: 'name', title: a.name }, a.name),
         isActive
-          ? el('span', { className: 'tag' }, 'in use')
+          ? el('span', { className: 'tag' }, s.signedOut ? 'signed out' : 'in use')
           : el('button', { onclick: () => act({ type: 'switch', name: a.name }) }, 'Use'),
         el('button', {
           className: 'x', title: 'Remove',
