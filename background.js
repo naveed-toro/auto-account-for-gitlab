@@ -121,7 +121,7 @@ async function restore(name) {
 async function setActive(name) {
   await chrome.storage.local.set({ active: name });
   try {
-    await chrome.action.setBadgeBackgroundColor({ color: '#6b4fbb' });
+    await chrome.action.setBadgeBackgroundColor({ color: '#2f2f35' });
     await chrome.action.setBadgeText({ text: name ? name.slice(0, 2).toUpperCase() : '' });
     await chrome.action.setTitle({ title: name ? 'GitLab: ' + name : 'Auto Account for GitLab' });
   } catch {}
