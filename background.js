@@ -142,17 +142,20 @@ function switchTo(name) {
 }
 
 // --- A link whose namespace already has a rule: switch before it loads -------
-chrome.webNavigation.onBeforeNavigate.addListener(
-  async (d) => {
-    if (d.frameId !== 0) return;
-    const ns = namespaceOf(d.url);
-    if (!ns) return;
-    const st = await getState();
-    const target = st.rules[ns];
-    if (!target || !st.accounts[target] || st.active === target) return;
-    if (await switchTo(target)) chrome.tabs.update(d.tabId, { url: d.url });
+async function switchForRule(d) {
+  const ns = namespaceOf(d.url);
+  if (!ns) return;
+  const st = await getState();
+  const target = st.rules[ns];
+  if (!target || !st.accounts[target] || st.active === target) return;
+  if (await switchTo(target)) chrome.tabs.update(d.tabId, { url: d.url });
+}
+
+chrome.webRequest.onBeforeRequest.addListener(
+  (d) => {
+    if (d.tabId >= 0 && d.method === 'GET') switchForRule(d);
   },
-  { url: [{ hostEquals: HOST }] }
+  { urls: [ORIGIN + '/*'], types: ['main_frame'] }
 );
 
 // --- A page that answers 404: try the other accounts, remember what works ----

@@ -41,7 +41,7 @@ GitLab answers 404 for a private page you can't access. That 404 is the signal t
 - Your cookies stay on your computer, in the extension's local storage. Nothing is sent anywhere.
 - The extension talks only to gitlab.com, to ask who is signed in. No analytics, no other servers.
 - Saved sessions are stored unencrypted, just like the browser's own cookies. Anyone who can use your browser profile can use them, so don't install it on a shared computer.
-- Chrome lists "read your browsing history" for it. That comes from the `tabs` and `webNavigation` permissions, used to notice when a gitlab.com link opens. The code only listens to gitlab.com.
+- The only warning Chrome shows for it is "Read and change your data on gitlab.com". That is what it needs to swap gitlab.com cookies. It can't see any other site, not even the addresses of your other tabs.
 
 ## Limits
 
