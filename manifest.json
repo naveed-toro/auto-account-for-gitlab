@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Auto Account for GitLab",
+  "version": "1.0.0",
+  "description": "Remembers several gitlab.com accounts and opens every link with the account that has access to it.",
+  "permissions": ["cookies", "storage", "tabs", "webNavigation", "webRequest"],
+  "host_permissions": ["https://gitlab.com/*"],
+  "background": { "service_worker": "background.js" },
+  "action": { "default_title": "Auto Account for GitLab", "default_popup": "popup.html" }
+}

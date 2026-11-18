@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { width: 320px; margin: 0; padding: 14px; font: 13px/1.45 "Segoe UI", system-ui, sans-serif; color: #1f1e24; }
+  h1 { font-size: 14px; margin: 0 0 10px; }
+  h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #737278; margin: 16px 0 6px; }
+  .row { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border: 1px solid #dcdcde; border-radius: 6px; margin-bottom: 6px; }
+  .row.active { border-color: #6b4fbb; background: #f4f0ff; }
+  .name { flex: 1; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tag { font-size: 11px; color: #6b4fbb; font-weight: 600; }
+  .rule { display: flex; align-items: center; gap: 6px; padding: 3px 0; }
+  .rule code { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  button { font: inherit; padding: 4px 10px; border: 1px solid #bfbfc3; border-radius: 5px; background: #fff; cursor: pointer; }
+  button:hover { background: #f0f0f2; }
+  button.primary { background: #6b4fbb; border-color: #6b4fbb; color: #fff; width: 100%; padding: 7px; margin-top: 4px; }
+  button.primary:hover { background: #5a3fa8; }
+  button.x { border: none; padding: 2px 6px; color: #737278; }
+  .note { background: #fdf1dd; border-radius: 6px; padding: 8px; margin-bottom: 8px; }
+  .muted { color: #737278; }
+  input, select { font: inherit; padding: 4px 6px; border: 1px solid #bfbfc3; border-radius: 5px; min-width: 0; }
+  .add { display: flex; gap: 6px; margin-top: 6px; }
+  .add input { flex: 1; }
+</style>
+</head>
+<body>
+  <h1>Auto Account for GitLab</h1>
+  <div id="note"></div>
+  <div id="accounts"></div>
+  <button class="primary" id="addAnother">+ Add another account</button>
+
+  <h2>Which group opens with which account</h2>
+  <div id="rules"></div>
+  <div class="add">
+    <input id="ns" placeholder="group, e.g. my-company">
+    <select id="acc"></select>
+    <button id="addRule">Add</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
