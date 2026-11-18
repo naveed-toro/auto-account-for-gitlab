@@ -43,6 +43,8 @@ GitLab answers 404 for a private page you can't access. That 404 is the signal t
 - Saved sessions are stored unencrypted, just like the browser's own cookies. Anyone who can use your browser profile can use them, so don't install it on a shared computer.
 - The only warning Chrome shows for it is "Read and change your data on gitlab.com". That is what it needs to swap gitlab.com cookies. It can't see any other site, not even the addresses of your other tabs.
 
+Full details: [privacy policy](PRIVACY.md).
+
 ## Limits
 
 - gitlab.com only, not self-hosted GitLab.
