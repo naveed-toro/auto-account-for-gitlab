@@ -118,20 +118,28 @@ async function restore(name) {
   }
 }
 
-// Two letters for the badge. When another saved account starts the same way,
-// skip the part they share so the badge still tells them apart: aa-demo-home → HO.
+// Two letters for the badge. When another saved account starts with the same
+// two, show what tells them apart: aa-demo-home → HO, naveed (vs nasir) → NV.
 function badgeText(name, names) {
-  const two = (s) => s.replace(/^[^a-z0-9]+/i, '').slice(0, 2).toUpperCase();
+  const mine = name.slice(0, 2).toUpperCase();
+  const letters = (s) => s.replace(/[^a-z0-9]/gi, '');
   const a = name.toLowerCase();
-  let shared = 0;
+  let shared = 0; // how far this name runs alike with a look-alike account
   for (const other of names) {
     const b = other.toLowerCase();
-    if (b === a || two(b) !== two(a)) continue;
+    if (b === a || other.slice(0, 2).toUpperCase() !== mine) continue;
     let i = 0;
     while (i < a.length && a[i] === b[i]) i++;
     shared = Math.max(shared, i);
   }
-  return two(name.slice(shared)) || two(name);
+  const rest = letters(name.slice(shared));
+  if (!shared || !rest) return mine;
+  // The difference starts a new word (aa-demo-|home, team|2, John|Work): show that word.
+  const prev = name[shared - 1], next = name[shared];
+  const newWord = /[^a-z0-9]/i.test(prev + next) || /\d/.test(prev) !== /\d/.test(next) ||
+    (/[a-z]/.test(prev) && /[A-Z]/.test(next));
+  // Otherwise it starts mid-word (na|veed): keep the first letter, add the one that differs.
+  return (newWord ? rest.slice(0, 2) : letters(name)[0] + rest[0]).toUpperCase();
 }
 
 async function showBadge() {
